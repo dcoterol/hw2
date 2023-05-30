@@ -74,8 +74,16 @@ Movie.destroy_all
 Actor.destroy_all
 Role.destroy_all
 
-# Generate models and tables, according to the domain model.
-# TODO!
+# # Generate models and tables, according to the domain model.
+# - db/migrate/*_create_studios.rb
+# - app/models/studio.rb
+# - db/migrate/*_create_movies.rb
+# - app/models/movie.rb
+# - db/migrate/*_create_actors.rb
+# - app/models/actor.rb
+# - db/migrate/*_create_roles.rb
+# - app/models/role.rb
+# - db/schema.rb
 
 # Insert data into the database that reflects the sample data shown above.
 # Do not use hard-coded foreign key IDs.
@@ -86,8 +94,8 @@ studio.save
 
 batman_begins = Movie.new
 batman_begins["title"] = "Batman Begins"
-batman_begins["year_released"] = 2005
-batman_begins["rated"] = "PG-13"
+batman_begins["release_date"] = 2005
+batman_begins["rating"] = "PG-13"
 batman_begins["studio_id"] = studio["id"]
 batman_begins.save
 
@@ -143,8 +151,8 @@ batman_begins.save
 
 dark_knight = Movie.new
 dark_knight["title"] = "The Dark Knight"
-dark_knight["year_released"] = 2008
-dark_knight["rated"] = "PG-13"
+dark_knight["release_date"] = 2008
+dark_knight["rating"] = "PG-13"
 dark_knight["studio_id"] = studio["id"]
 dark_knight.save
 
@@ -192,8 +200,8 @@ dark_knight.save
 
 dark_knight_rises = Movie.new
 dark_knight_rises["title"] = "The Dark Knight Rises"
-dark_knight_rises["year_released"] = 2012
-dark_knight_rises["rated"] = "PG-13"
+dark_knight_rises["release_date"] = 2012
+dark_knight_rises["rating"] = "PG-13"
 dark_knight_rises["studio_id"] = studio["id"]
 dark_knight_rises.save
 
@@ -245,7 +253,17 @@ puts "======"
 puts ""
 
 # Query the movies data and loop through the results to display the movies output.
-# TODO!
+movies = Movie.all
+for movie in movies
+  studio = Studio.find_by({"id" => movie["studio_id"]})
+
+  movie_title = movie["title"]
+  release_date = movie["release_date"]
+  rating = movie["rating"]
+  studio_name = studio["name"]
+
+  puts "#{movie_title} - #{release_date} - #{rating} - #{studio_name}"
+end
 
 # Prints a header for the cast output
 puts ""
@@ -254,4 +272,14 @@ puts "========"
 puts ""
 
 # Query the cast data and loop through the results to display the cast output for each movie.
-# TODO!
+roles = Role.all
+for role in roles
+  movie = Movie.find_by({"id" => role["movie_id"]})
+  actor = Actor.find_by({"id" => role["actor_id"]})
+
+  movie_title = movie["title"]
+  actor_name = actor["name"]
+  character_name = role["character_name"]
+
+  puts "#{movie_title} - #{actor_name} - #{character_name}"
+end
